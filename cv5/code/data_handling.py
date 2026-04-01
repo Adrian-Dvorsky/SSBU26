@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.datasets import load_breast_cancer
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from typing import Tuple, List, Optional, Callable
@@ -69,7 +69,8 @@ class Dataset:
         """
         scalers = {
             'standard': StandardScaler(),
-            'normalize': MinMaxScaler()
+            'normalize': MinMaxScaler(),
+            'robust': RobustScaler()
         }
         scaler = scalers.get(scale_type)
         if not scaler:
@@ -196,3 +197,27 @@ class Dataset:
         self.__generic_plot(plt.hist, scaled_feature, bins=20, color='orange', alpha=0.7,
                             title=f"After Scaling: {feature_name}", xlabel=feature_name, ylabel="Frequency",
                             figsize=(12, 6))
+
+    def calculate_statistics(self):
+        data_frame = pd.DataFrame(self.data, columns=self.feature_names)
+        statistics = pd.DataFrame({
+            "mean" : data_frame.mean(),
+            "median" : data_frame.median(),
+            "std" : data_frame.std(),
+        })
+
+        return statistics
+
+    def summarize_features(self, feature_names = None):
+        data_frame = pd.DataFrame(self.data, columns=self.feature_names)
+        if feature_names is not None:
+            data_frame = data_frame[feature_names]
+
+        statistics = pd.DataFrame({
+            "unique" : data_frame.nunique(),
+            "common" : data_frame.mode().iloc[0],
+            "frequency" : data_frame.apply(lambda col: col.value_counts().iloc[0])
+        })
+
+        return statistics
+
