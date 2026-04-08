@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 from typing import Callable
 
+import os
 
 class BasePlotter:
     """Abstract base class for common plotting functionality."""
@@ -19,7 +20,17 @@ class BasePlotter:
         plot_func(*args, **kwargs)
         self.__apply_plot_labels(general_kwargs)
         plt.tight_layout()
+
+        dir = "outputs"
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        title = general_kwargs.get('title') or "plot"
+        safe_title = title.replace(" ", "_").replace(":", "").lower()
+        filename = f"{dir}/{safe_title}.png"
+        plt.savefig(filename)
         plt.show()
+
+
 
     def __apply_plot_labels(self, general_kwargs):
         """

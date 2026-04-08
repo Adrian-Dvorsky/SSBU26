@@ -24,3 +24,5 @@ TestResults.xml
 .idea/
 #test
 test/
+#interpreter
+.venv
