@@ -24,6 +24,7 @@ app_ui = ui.page_fluid(
         ui.sidebar(
             ui.panel_title("Biomedical Data Visualization and Analysis"),
             ui.output_text("txt_status_code"),
+            ui.output_text("avg_value"),
             ui.input_file("file1", "Choose CSV File", accept=".csv"),
             ui.input_action_button("add_patient", "Add Patient"),
             ui.input_text("patient_id", "Select Patient", placeholder="Patient ID", value="Patient 1"),
@@ -31,6 +32,7 @@ app_ui = ui.page_fluid(
             # Make the slider dynamic by rendering it in the server
             ui.output_ui("dynamic_slider"),
             ui.input_action_button("generate_data", "Generate Data"),
+            ui.input_action_button("calculate_average", "Calculate Average"),
             ui.input_radio_buttons("view_type", "Choose View",
                                    choices=list(data.views.values()), selected="Visualization"),
             # Dynamic UI element

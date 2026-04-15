@@ -10,6 +10,7 @@ def server(input, output, session):
     patient_data_dict = reactive.Value(data.data)
     conditional_ui = reactive.Value(None)
     txt_status = reactive.Value("")
+    avg_status = reactive.Value("")
 
     # Define ranges and descriptions for each measurement type
     measurement_ranges = {
@@ -39,6 +40,18 @@ def server(input, output, session):
         patient_id = input.patient_id()
         result = utils.generate_data_for_patient(patient_data_dict.get(), patient_id)
         txt_status.set(result)
+
+    @reactive.Effect
+    @reactive.event(input.calculate_average)
+    def calculate_average():
+        measurement = input.measurement_type()
+
+        all_values = pd.concat(
+            [df[measurement] for df in data.data.values()]
+        )
+        avg_status.set(f"{input.measurement_type()}: {all_values.mean()}")
+
+
 
     @reactive.Effect
     @reactive.event(input.view_type)
@@ -133,6 +146,11 @@ def server(input, output, session):
     @render.text
     def txt_status_code():
         return txt_status.get()
+
+    @output
+    @render.text
+    def avg_value():
+        return avg_status.get()
 
 
 app = App(shiny_ui.app_ui, server)
