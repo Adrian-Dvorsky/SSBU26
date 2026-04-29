@@ -14,6 +14,9 @@ def load_sequence(filepath):
     - Return the sequence record.
     """
 
+    record = SeqIO.read(filepath, format="genbank")
+    print("Sequence ID:", record.id)
+    print("Sequence:", record.description)
 # Task 2: Create complementary strand
 def create_complementary_strand(dna_sequence):
     """
@@ -23,6 +26,11 @@ def create_complementary_strand(dna_sequence):
     - Print the complementary strand.
     - Return the complementary strand.
     """
+
+    complement_table = str.maketrans('ATCG', 'TAGC')
+    dna_sequence_translate = str.translate(dna_sequence, complement_table)
+    print("DNA sequence:", dna_sequence_translate)
+    return dna_sequence_translate
 
 # Task 3: Create gene mutation
 def mutate(dna):
@@ -36,7 +44,15 @@ def mutate(dna):
     - Print the mutated DNA sequence.
     - Return the mutated DNA sequence.
     """
-
+    characters = list(dna)
+    base = ['A', 'C', 'G', 'T']
+    for i in range(1000):
+        index = randint(0, len(characters) - 1)
+        base_random = choice(base)
+        list[index] = base(base_random)
+    muted_dna = ''.join(characters)
+    print("Mutated DNA:", muted_dna)
+    return muted_dna
 # Task 4: Calculate GC content
 def calculate_gc_content(dna_sequence):
     """
@@ -46,11 +62,15 @@ def calculate_gc_content(dna_sequence):
     - Print the GC content percentage.
     - Return the GC content percentage.
     """
+    g_count = dna_sequence.count('G')
+    c_count = dna_sequence.count('C')
+    percentage = round((g_count / c_count) * 100, 2)
+    return percentage
 
 # Example usage
 if __name__ == "__main__":
     # Task 1: Load sequence from the inputs directory
-    sequence_record = load_sequence("inputs/NC_005816.gb")
+    sequence_record = load_sequence("../inputs/NC_005816.gb")
 
     # Task 2: Create complementary strand
     create_complementary_strand("TACCGGAT")
